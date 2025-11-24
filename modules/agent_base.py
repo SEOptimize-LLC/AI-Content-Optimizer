@@ -8,7 +8,7 @@ from typing import Dict, List, Optional
 
 from pydantic import BaseModel, Field
 
-from .config import AppConfig, ContentProfile
+from modules.config import AppConfig, ContentProfile
 
 
 class Severity(str, Enum):

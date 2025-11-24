@@ -13,7 +13,7 @@ try:  # Streamlit is optional for local unit tests
 except ModuleNotFoundError:  # pragma: no cover
     st = None
 
-from ..modules.config import AppConfig
+from modules.config import AppConfig
 
 
 class ChatMessage(BaseModel):
