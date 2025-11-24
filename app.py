@@ -118,9 +118,17 @@ def main():
             options=list(OptimizationMode),
             format_func=lambda m: m.value,
         )
-        selected_model = st.text_input(
+        selected_model = st.selectbox(
             "OpenRouter Model",
-            value="google/gemini-3-pro-preview",
+            options=[
+                "google/gemini-2.0-flash-exp:free",
+                "google/gemini-exp-1206:free",
+                "google/learnlm-1.5-pro-experimental:free",
+                "google/gemini-flash-1.5-8b",
+                "meta-llama/llama-3.2-3b-instruct:free",
+                "meta-llama/llama-3.2-1b-instruct:free",
+            ],
+            index=0,
         )
 
     config = AppConfig(
@@ -134,25 +142,39 @@ def main():
         "Primary Keyword",
         value="ai content optimization",
     )
-    title_tag = st.text_input("Title Tag", value="")
-    meta_description = st.text_area("Meta Description", value="", height=80)
-    raw_content = st.text_area(
-        "Content (Markdown)",
+    
+    uploaded_file = st.file_uploader(
+        "Upload Content (Markdown)",
+        type=["md", "txt"],
+        help="Upload a markdown file containing your content. The app will extract metadata if present.",
+    )
+    
+    raw_content_input = st.text_area(
+        "Or Paste Content (Markdown)",
         height=300,
         placeholder="# H1 Example\n\n## How does this work?\nParagraph...",
     )
 
-    metadata = {
-        "primary_keyword": primary_keyword,
-        "title": title_tag,
-        "meta_description": meta_description,
-        "schema": {},
-    }
-
     if st.button("Run Optimization", type="primary"):
-        if not raw_content.strip():
-            st.error("Please provide content to optimize.")
+        raw_content = ""
+        if uploaded_file is not None:
+            raw_content = uploaded_file.read().decode("utf-8")
+        elif raw_content_input.strip():
+            raw_content = raw_content_input
+        else:
+            st.error("Please upload a file or paste content to optimize.")
             return
+
+        # Basic metadata extraction from frontmatter could be added here if needed
+        # For now, we rely on the primary keyword input and empty defaults for others
+        # allowing the MetadataOptimizer to generate them.
+        metadata = {
+            "primary_keyword": primary_keyword,
+            "title": "",  # Will be generated/optimized
+            "meta_description": "",  # Will be generated/optimized
+            "schema": {},
+        }
+        
         document = build_document(raw_content, profile, metadata)
         results, final_doc = run_pipeline(document, config)
         render_feedback(results)
