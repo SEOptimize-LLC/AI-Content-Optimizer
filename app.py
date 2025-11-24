@@ -121,14 +121,17 @@ def main():
         selected_model = st.selectbox(
             "OpenRouter Model",
             options=[
-                "google/gemini-2.0-flash-exp:free",
-                "google/gemini-exp-1206:free",
-                "google/learnlm-1.5-pro-experimental:free",
-                "google/gemini-flash-1.5-8b",
-                "meta-llama/llama-3.2-3b-instruct:free",
-                "meta-llama/llama-3.2-1b-instruct:free",
+                "openai/gpt-5.1",
+                "openai/gpt-4.1-mini",
+                "anthropic/claude-sonnet-4.5",
+                "google/gemini-3-pro-preview",
+                "google/gemini-2.5-flash-preview-09-2025",
+                "x-ai/grok-4.1-fast",
+                "qwen/qwen-turbo",
+                "meta-llama/llama-4-maverick",
+                "qwen/qwen3-vl-8b-thinking",
             ],
-            index=0,
+            index=3,
         )
 
     config = AppConfig(
