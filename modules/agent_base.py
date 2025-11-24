@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from abc import ABC, abstractmethod
 from enum import Enum
-from typing import Dict, List, Optional
+from typing import Any, Dict, List, Optional
 
 from pydantic import BaseModel, Field
 
@@ -38,14 +38,14 @@ class ContentBlock(BaseModel):
     block_id: str
     type: ContentBlockType
     text: str
-    metadata: Dict[str, str] = Field(default_factory=dict)
+    metadata: Dict[str, Any] = Field(default_factory=dict)
 
 
 class DocumentPayload(BaseModel):
     raw_text: str
     blocks: List[ContentBlock]
     profile: ContentProfile
-    metadata: Dict[str, str] = Field(default_factory=dict)
+    metadata: Dict[str, Any] = Field(default_factory=dict)
 
 
 class OptimizationFeedback(BaseModel):

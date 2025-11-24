@@ -54,7 +54,7 @@ def parse_blocks(raw_text: str) -> List[ContentBlock]:
 def build_document(
     raw_text: str,
     profile: ContentProfile,
-    metadata: Dict[str, str],
+    metadata: Dict[str, any],
 ) -> DocumentPayload:
     blocks = parse_blocks(raw_text)
     return DocumentPayload(
