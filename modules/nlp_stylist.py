@@ -97,34 +97,45 @@ class NLPStylistAgent(OptimizationAgent):
         feedback: List[OptimizationFeedback] = []
         optimized_blocks: List[ContentBlock] = []
 
+        # Limit processing to avoid timeouts
+        processed_count = 0
+        MAX_BLOCKS_TO_PROCESS = 5
+
         for block in context.document.blocks:
             if block.type != ContentBlockType.PARAGRAPH:
                 continue
+            
             if self._needs_density_upgrade(block.text):
-                rewritten = self._rewrite_dense(block.text)
-                optimized_blocks.append(
-                    ContentBlock(
-                        block_id=block.block_id,
-                        type=block.type,
-                        text=rewritten,
-                        metadata=block.metadata,
+                if processed_count < MAX_BLOCKS_TO_PROCESS:
+                    rewritten = self._rewrite_dense(block.text)
+                    processed_count += 1
+
+                    optimized_blocks.append(
+                        ContentBlock(
+                            block_id=block.block_id,
+                            type=block.type,
+                            text=rewritten,
+                            metadata=block.metadata,
+                        )
                     )
-                )
-                feedback.append(
-                    self._issue(
-                        element=f"Paragraph {block.block_id}",
-                        issue=(
-                            "Sentences lack entity-rich, active "
-                            "constructions."
-                        ),
-                        mandate=(
-                            "Rewrite using SVO, explicit entities, and "
-                            "cause→effect connectors."
-                        ),
-                        optimized=rewritten,
-                        severity=Severity.HIGH,
+                    feedback.append(
+                        self._issue(
+                            element=f"Paragraph {block.block_id}",
+                            issue=(
+                                "Sentences lack entity-rich, active "
+                                "constructions."
+                            ),
+                            mandate=(
+                                "Rewrite using SVO, explicit entities, and "
+                                "cause→effect connectors."
+                            ),
+                            optimized=rewritten,
+                            severity=Severity.HIGH,
+                        )
                     )
-                )
+                else:
+                    # Skip optimization if limit reached
+                    pass
 
         score_delta = max(0, 80 - 10 * len(feedback))
         return AgentPassResult(

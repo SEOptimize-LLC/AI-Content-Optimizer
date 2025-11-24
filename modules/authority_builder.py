@@ -74,28 +74,39 @@ class AuthorityBuilderAgent(OptimizationAgent):
         feedback: List[OptimizationFeedback] = []
         optimized_blocks: List[ContentBlock] = []
 
+        # Limit processing to avoid timeouts
+        processed_count = 0
+        MAX_BLOCKS_TO_PROCESS = 5
+
         for block in context.document.blocks:
             if block.type != ContentBlockType.PARAGRAPH:
                 continue
+            
             if self._needs_authority_upgrade(block.text):
-                rewritten = self._rewrite_authority(block.text)
-                optimized_blocks.append(
-                    ContentBlock(
-                        block_id=block.block_id,
-                        type=block.type,
-                        text=rewritten,
-                        metadata=block.metadata,
+                if processed_count < MAX_BLOCKS_TO_PROCESS:
+                    rewritten = self._rewrite_authority(block.text)
+                    processed_count += 1
+
+                    optimized_blocks.append(
+                        ContentBlock(
+                            block_id=block.block_id,
+                            type=block.type,
+                            text=rewritten,
+                            metadata=block.metadata,
+                        )
                     )
-                )
-                feedback.append(
-                    self._issue(
-                        element=f"Paragraph {block.block_id}",
-                        issue="Paragraph lacks explicit E-E-A-T markers.",
-                        mandate="Add data-backed citation, date, and first-hand signal (e.g., 'In our audits...').",
-                        optimized=rewritten,
-                        severity=Severity.HIGH,
+                    feedback.append(
+                        self._issue(
+                            element=f"Paragraph {block.block_id}",
+                            issue="Paragraph lacks explicit E-E-A-T markers.",
+                            mandate="Add data-backed citation, date, and first-hand signal (e.g., 'In our audits...').",
+                            optimized=rewritten,
+                            severity=Severity.HIGH,
+                        )
                     )
-                )
+                else:
+                    # Skip optimization if limit reached
+                    pass
 
         score_delta = max(0, 80 - 10 * len(feedback))
         return AgentPassResult(
