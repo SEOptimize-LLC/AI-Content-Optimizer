@@ -5,7 +5,7 @@ from __future__ import annotations
 import re
 from typing import List, Optional
 
-from .agent_base import (
+from modules.agent_base import (
     AgentContext,
     AgentPassResult,
     ContentBlock,
@@ -14,8 +14,8 @@ from .agent_base import (
     OptimizationFeedback,
     Severity,
 )
-from .config import AppConfig, RuleSet
-from ..utils.llm_handler import ChatMessage, OpenRouterClient
+from modules.config import AppConfig, RuleSet
+from utils.llm_handler import ChatMessage, OpenRouterClient
 
 
 class ContentStrategistAgent(OptimizationAgent):

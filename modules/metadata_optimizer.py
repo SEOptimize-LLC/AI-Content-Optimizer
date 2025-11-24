@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from typing import Dict, List
 
-from .agent_base import (
+from modules.agent_base import (
     AgentContext,
     AgentPassResult,
     ContentBlock,
@@ -12,7 +12,7 @@ from .agent_base import (
     OptimizationFeedback,
     Severity,
 )
-from .config import AppConfig
+from modules.config import AppConfig
 
 TITLE_LIMIT = 60
 META_LIMIT_MIN = 140

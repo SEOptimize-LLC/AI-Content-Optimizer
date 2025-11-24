@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from typing import List, Optional
 
-from .agent_base import (
+from modules.agent_base import (
     AgentContext,
     AgentPassResult,
     ContentBlock,
@@ -13,8 +13,8 @@ from .agent_base import (
     OptimizationFeedback,
     Severity,
 )
-from .config import AppConfig
-from ..utils.llm_handler import ChatMessage, OpenRouterClient
+from modules.config import AppConfig
+from utils.llm_handler import ChatMessage, OpenRouterClient
 
 MIN_CHUNK = 75
 MAX_CHUNK = 250
