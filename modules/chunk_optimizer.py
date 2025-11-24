@@ -59,6 +59,7 @@ class ChunkOptimizerAgent(OptimizationAgent):
                         optimized=chunk.text[:200] + "...",
                         severity=Severity.MEDIUM,
                     )
+                )
         score_delta = max(0, 100 - 15 * len(feedback))
         return AgentPassResult(
             feedback=feedback,

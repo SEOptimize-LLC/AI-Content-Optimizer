@@ -57,6 +57,7 @@ class AuthorityBuilderAgent(OptimizationAgent):
                         optimized="Add year",
                         severity=Severity.MEDIUM,
                     )
+                )
 
         score_delta = max(0, 85 - 10 * len(feedback))
         return AgentPassResult(
